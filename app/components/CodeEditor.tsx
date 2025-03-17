@@ -27,6 +27,7 @@ export default function CodeEditor() {
   const synth = typeof window !== "undefined" ? window.speechSynthesis : null;
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
+  const [isSpeak, setIsSpeak] = useState(false);
   const removeEmojis = (text: string): string => {
     return text.replace(
       /([\uD800-\uDBFF][\uDC00-\uDFFF]|\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
@@ -89,11 +90,11 @@ export default function CodeEditor() {
       const newText = displayText.slice(lastSpokenIndex.current);
       if (newText.endsWith("\n")) {
         const cleanedText = removeEmojis(newText.trim()); // Remove emojis
-        speakText(cleanedText);
+        if (isSpeak) speakText(cleanedText);
         lastSpokenIndex.current = displayText.length;
       }
     }
-  }, [displayText]);
+  }, [displayText, isSpeak]);
 
   const speakText = (text: string) => {
     if (synth && text.trim()) {
@@ -167,6 +168,8 @@ export default function CodeEditor() {
           typingSpeed={typingSpeed}
           setTypingSpeed={setTypingSpeed}
           isStopRecording={isStopRecording}
+          setIsSpeak={setIsSpeak}
+          isSpeak={isSpeak}
         />
 
         <div className="p-4" ref={mainTextRef}>

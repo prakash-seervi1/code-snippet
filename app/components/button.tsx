@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Video, Camera, Zap, Play, Pause } from "lucide-react"; // Added Sliders for Speed Control
+import { Video, Camera, Zap, Play, Pause, Mic, MicOff } from "lucide-react"; // Added Sliders for Speed Control
 import html2canvas from "html2canvas";
 import Tippy from "@tippyjs/react";
 import { borderTopLeftRadius } from "html2canvas/dist/types/css/property-descriptors/border-radius";
@@ -15,6 +15,8 @@ export default function ButtonContoler({
   typingSpeed,
   setTypingSpeed,
   isStopRecording,
+  setIsSpeak,
+  isSpeak,
 }) {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
@@ -97,6 +99,12 @@ export default function ButtonContoler({
     setIsPlaying(!isPlaying); // Start animation
   };
 
+  const startSpeak = () => {
+    // setDisplayText(""); // Clear previous text
+    // setTypingIndex(0);
+    setIsSpeak(!isSpeak); // Start animation
+  };
+
   return (
     <div className="flex items-center gap-2 p-4">
       {/* Language Selection */}
@@ -115,6 +123,19 @@ export default function ButtonContoler({
         <option value="swift">Swift</option>
         <option value="kotlin">Kotlin</option>
       </select>
+
+      <Tippy content="Toggle Typing Mode">
+        <button
+          onClick={() => startSpeak()}
+          className="bg-[#1e1e1e] w-10 h-10 rounded-md border border-gray-700 flex items-center justify-center"
+        >
+          {!isSpeak ? (
+            <Mic className="w-5 h-5 text-green-400" />
+          ) : (
+            <MicOff className="w-5 h-5 text-green-400" />
+          )}
+        </button>
+      </Tippy>
 
       {/* Play Button */}
       <Tippy content="Start Printing">
