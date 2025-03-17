@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -39,4 +43,19 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+#SyntaxHighlighter > pre {
+  margin-top: 0 !important ;
+  border-radius: 0 0 0.3em 0.3em !important;
+}
+
+.innerSyntaxHighlighter {
+  background: #171717 !important;
+  margin-left: 0.5em !important;
+  margin-right: 0.5em !important;
+}
+
+.code-font {
+  font-family: "Fira Code", "Courier New", monospace;
 }
