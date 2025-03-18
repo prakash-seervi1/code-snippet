@@ -45,6 +45,7 @@ export default function CodeEditor() {
     }
   }, [synth]);
 
+  
   useEffect(() => {
     if (!isPlaying) {
       cancel(); // Stop speech when new text is entered
@@ -76,6 +77,11 @@ export default function CodeEditor() {
     }
   }, [typingIndex, inputText, typingSpeed, instantPrint, isPlaying]);
 
+  // const formatTextForLineBreaks = (text: string) => {
+  //   return text.replace(/(.{60})/g, "$1\n"); // Insert newline after every 80 characters
+  // };
+
+  
   // Auto-scroll Fix
   useEffect(() => {
     if (mainTextRef.current) {
@@ -126,7 +132,12 @@ export default function CodeEditor() {
   const preprocessText = (text: string) => {
     return text
       .replace(/\|\<#\|(.*?)\|\#\>\|/gs, "```javascript\n$1\n```")
-      .replace(/\|\<@\|(.*?)\|\@>\|/gs, "```typescript\n$1\n```"); // Default to JavaScript
+      .replace(/\|\<@\|(.*?)\|\@>\|/gs, "```typescript\n$1\n```")
+      .replace(/\|\<h1\|(.*?)\|\h1>\|/gs, "```h1\n$1\n```")
+      .replace(/\|\<h2\|(.*?)\|\h2>\|/gs, "```h2\n$1\n```")
+      .replace(/\|\<h3\|(.*?)\|\h3>\|/gs, "```h3\n$1\n```")
+      .replace(/\|\<h4\|(.*?)\|\h4>\|/gs, "```h4\n$1\n```")
+      .replace(/\|\<h5\|(.*?)\|\h5>\|/gs, "```h5\n$1\n```");  // Default to JavaScript
   };
 
   return (
@@ -137,6 +148,7 @@ export default function CodeEditor() {
     >
       <textarea
         className="w-full max-w-7xl p-3 mb-4 border border-gray-700 rounded-lg bg-[#1e1e1e] text-white"
+        style={{width: "700px","wordBreak": "break-word"}}
         placeholder="Paste your text here..."
         value={inputText}
         onChange={handleTextChange}
@@ -172,7 +184,7 @@ export default function CodeEditor() {
           isSpeak={isSpeak}
         />
 
-        <div className="p-4" ref={mainTextRef}>
+        <div className="p-4  w-[800px]  mx-auto  overflow-hidden break-words" ref={mainTextRef}>
           <div
             className="bg-[#2d2d2d] rounded-lg shadow-lg relative p-4 text-white font-mono overflow-auto"
             style={{ borderRadius: "0.3em 0.3em 0 0 !important" }}
@@ -185,7 +197,7 @@ export default function CodeEditor() {
           </div>
           {/* {renderContent(displayText)} */}
 
-          <div className="bg-[#282a36] rounded-lg" id="SyntaxHighlighter">
+          <div className="bg-[#282a36]  overflow-hidden break-words rounded-lg" id="SyntaxHighlighter">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -196,13 +208,14 @@ export default function CodeEditor() {
                     return children;
                   }
                   return (
+                    <div className="break-words overflow-hidden whitespace-pre-wrap">
                     <SyntaxHighlighter
                       style={dracula}
                       language={language}
-                      className="bg-gray-700 text-sm p-5 m-2 rounded-lg"
+                      className="bg-gray-700 text-lg p-5 m-2 rounded-lg break-words overflow-hidden"
                     >
                       {children}
-                    </SyntaxHighlighter>
+                    </SyntaxHighlighter></div>
                   );
                 },
                 code({ node, inline, className, children, ...props }) {
@@ -210,22 +223,95 @@ export default function CodeEditor() {
                   const matchInline = /language-typescript/.exec(
                     className || ""
                   );
+                  const matchH1 = /language-h1/.exec(
+                    className || ""
+                  );
+                  const matchH2 = /language-h2/.exec(
+                    className || ""
+                  );
+                  const matchH3 = /language-h3/.exec(
+                    className || ""
+                  );
+                  const matchH4 = /language-h4/.exec(
+                    className || ""
+                  );
+                  const matchH5 = /language-h5/.exec(
+                    className || ""
+                  );
 
                   if (!inline && match) {
                     return (
+                    <div className="break-words overflow-hidden whitespace-pre-wrap">
+
                       <SyntaxHighlighter
                         style={dracula}
                         language={language}
-                        className="innerSyntaxHighlighter bg-[#2d2d2d] text-sm p-1  rounded-lg"
+                        className="innerSyntaxHighlighter bg-[#2d2d2d] text-base p-1  rounded-lg overflow-hidden break-words"
                         {...props}
                       >
                         {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
+                      </SyntaxHighlighter></div>
                     );
-                  } else if (!inline && matchInline) {
+                  } 
+                  else if (!inline && matchH1) {
+                    return (
+                      <h1
+                        className="code-font text-pink-400 font-mono overflow-hidden break-words"
+                        style={{fontSize:"2em",fontWeight:"bold"}}
+                        {...props}
+                      >
+                        {children}
+                      </h1>
+                    )
+                  }
+                  else if (!inline && matchH2) {
+                    return (
+                      <h2
+                        className="code-font text-yellow-400 font-mono overflow-hidden break-words"
+                        style={{fontSize:"1.5em",fontWeight:"bold"}}
+                        {...props}
+                      >
+                        {children}
+                      </h2>
+                    )
+                  }
+                  else if (!inline && matchH3) {
+                    return (
+                      <h3
+                        className="code-font text-pink-400 font-mono overflow-hidden break-words"
+                        style={{fontSize:"1.3em"}}
+                        {...props}
+                      >
+                        {children}
+                      </h3>
+                    )
+                  }
+                  else if (!inline && matchH4) {
+                    return (
+                      <h4
+                        className="code-font text-red-400 font-mono overflow-hidden break-words"
+                        style={{fontSize:"1.125em"}}
+                        {...props}
+                      >
+                        {children}
+                      </h4>
+                    )
+                  }
+                  else if (!inline && matchH5) {
+                    return (
+                      <h5
+                        className="code-font text-orange-400 font-mono overflow-hidden break-words"
+                        style={{fontSize:"0.83em"}}
+                        {...props}
+                      >
+                        {children}
+                      </h5>
+                    )
+                  }
+                  else if (!inline && matchInline) {
                     return (
                       <code
-                        className="code-font text-pink-400 font-mono"
+                        className="code-font text-pink-400 font-mono overflow-hidden break-words"
                         {...props}
                       >
                         {children}
@@ -233,13 +319,14 @@ export default function CodeEditor() {
                     );
                   } else {
                     return (
-                      <SyntaxHighlighter
-                        style={dracula}
-                        language={language}
-                        className="bg-gray-700 text-sm p-5 m-2 rounded-lg"
-                      >
-                        {children}
-                      </SyntaxHighlighter>
+                      <div className="break-words overflow-hidden whitespace-pre-wrap">
+                    <SyntaxHighlighter
+                      style={dracula}
+                      language={language}
+                      className="bg-gray-700 text-base p-5 m-2 rounded-xl break-words overflow-hidden"
+                    >
+                      {children}
+                    </SyntaxHighlighter></div>
                     );
                   }
                 },
