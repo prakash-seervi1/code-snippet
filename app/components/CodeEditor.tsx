@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "tippy.js/dist/tippy.css";
@@ -201,10 +201,11 @@ export default function CodeEditor() {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                p({ node, inline, className, children, ...props }) {
+                p({  children }) {
                   // Avoid wrapping <pre> inside <p>
+                  const childArray = React.Children.toArray(children);
 
-                  if (children?.length === 1 && children[0]?.type === "pre") {
+                  if (childArray?.length === 1 && children[0]?.type === "pre") {
                     return children;
                   }
                   return (
@@ -218,7 +219,11 @@ export default function CodeEditor() {
                     </SyntaxHighlighter></div>
                   );
                 },
-                code({ node, inline, className, children, ...props }) {
+                code({  inline = false, className, children,...props }: {
+                  inline?: boolean;
+                  className?: string;
+                  children: React.ReactNode;
+                }) {
                   const match = /language-javascript/.exec(className || "");
                   const matchInline = /language-typescript/.exec(
                     className || ""

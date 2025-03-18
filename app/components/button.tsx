@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Video, Camera, Zap, Play, Pause, Mic, MicOff } from "lucide-react"; // Added Sliders for Speed Control
 import html2canvas from "html2canvas";
 import Tippy from "@tippyjs/react";
-import { borderTopLeftRadius } from "html2canvas/dist/types/css/property-descriptors/border-radius";
 
 export default function ButtonContoler({
   language,
