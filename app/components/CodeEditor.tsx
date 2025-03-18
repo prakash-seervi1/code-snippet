@@ -118,6 +118,7 @@ export default function CodeEditor() {
     setTypingIndex(0);
     setIsPlaying(false); // Reset Play state when input changes
     cancel(); // Stop speech when new text is entered
+    lastSpokenIndex.current=0
   };
 
   const scrollToBottom = () => {
